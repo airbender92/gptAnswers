@@ -4,10 +4,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  entry: "../src/index.tsx",
+  entry: path.resolve(__dirname, "../src/index.tsx"),
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, '../dist')
   },
   module: {
     rules: [
@@ -18,12 +18,10 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: ["@babel/preset-env", '@babel/preset-react']
+              babelrc: true,
+              cacheDirectory: true
             }
           },
-          {
-            loader: 'ts-loader'
-          }
         ]
       },
       {
@@ -49,16 +47,18 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      "@": path.resolve(__dirname, '../src')
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: '../public/index.html'
+      template: 'public/index.html'
     }),
-    new webpack.ProcessPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css'
-    })
+    }),
   ]
 }

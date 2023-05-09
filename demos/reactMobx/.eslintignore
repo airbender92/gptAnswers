@@ -1,0 +1,25 @@
+# Dependency directories
+node_modules/
+build/
+
+# Output files
+dist/
+build/
+
+# Environment variables
+.env*
+
+# Ignore compiled .js files.
+*.js
+
+# Ignore all .d.ts files (TypeScript declaration files)
+*.d.ts
+
+# Ignore Less files as we compile them to CSS.
+*.less
+
+# Ignore linting of generated files
+src/**/*.generated.ts
+
+# Ignore GraphQL files
+src/**/*.graphql

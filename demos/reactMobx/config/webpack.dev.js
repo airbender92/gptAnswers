@@ -1,10 +1,16 @@
+
 const path = require('path');
+const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.comon.js')
 
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
+  entry: [
+    "react-hot-loader/patch",
+    path.resolve(__dirname, "../src/index.tsx"),
+  ],
   output: {
     publicPath: '/'
   },
@@ -20,8 +26,16 @@ module.exports = merge(common, {
       }
     ]
   },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ],
   devServer: {
-    contentBase: './dist',
-    open: true
+    static: {
+      directory: path.join(__dirname, '../dist')
+    },
+    port: 3000,
+    historyApiFallback: true,
+    hot: true,
+    open: false
   }
 })
