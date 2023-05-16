@@ -60,7 +60,7 @@ In this updated example, we added a `TIMEOUT` constant and set it as the default
 
 To use the timeout and cancellation features in your component, you can modify your API call to include these options:
 
-```
+```js
 import { apiClient, cancelTokenSource } from "../api/apiClient";
 
 function MyComponent() {
