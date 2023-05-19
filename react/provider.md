@@ -2,7 +2,7 @@
 
 Here is an example of using `useContext` and `useReducer` together:
 
-```
+```js
 import React, { createContext, useContext, useReducer } from 'react';
 
 const initialState = {

@@ -4,11 +4,11 @@ function graphReducer(state, action) {
     case 'init':
       return {
         ...state,
+        mx: action.mx,
         graph: action.graph
       };
-
     default:
-      throw new Error();
+      return state;
   }
 }
 

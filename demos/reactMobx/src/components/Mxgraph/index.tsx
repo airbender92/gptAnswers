@@ -12,8 +12,8 @@ const Mxgraph = ({ children, containerId }) => {
 
   useEffect(() => {
     if (containerId) {
-      const graph = createInstance(containerId);
-      dispatch({ type: 'init', graph })
+      const {graph, mx} = createInstance(containerId);
+      dispatch({ type: 'init', graph, mx })
     }
   }, [containerId])
 
