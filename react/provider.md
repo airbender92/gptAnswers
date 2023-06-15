@@ -60,3 +60,10 @@ Inside the `CounterProvider`, we call `useReducer` with our reducer function and
 Finally, we go back to our `Counter` component and use `useContext` to access the counter state and dispatch function from the context. We render the current count value and two buttons that let us increment and decrement the count using the dispatch function. 
 
 The `CounterProvider` component acts as a kind of global data store, holding the state and providing it to any other part of the application that needs it. The `Counter` component is just one example of how that state can be used, but any other component that needs access to the data can simply call `useContext` on the same context object to retrieve it.
+
+useEffect(() => {
+  setLocalState({
+    ...localState,
+    dataSource: props.dataSource
+  })
+}, [props.dataSource])

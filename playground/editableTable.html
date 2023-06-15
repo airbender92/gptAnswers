@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #myTable {
+  border-collapse: collapse;
+}
+#myTable th,
+#myTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+#myTable th {
+  background-color: #f2f2f2;
+}
+#myTable tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+  </style>
+</head>
+<body>
+  <table id="myTable">
+    <thead>
+      <tr>
+        <th>Column 1</th>
+        <th>Column 2</th>
+        <th>Column 3</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+      </tr>
+      <!-- Add more rows if required -->
+    </tbody>
+  </table>
+  <script>
+    const dataSource1 = [
+        { col1: 'value1', col2: 'value2', col3: 'value3' },
+        { col1: 'value4', col2: 'value5', col3: 'value6' },
+      ];
+
+      const dataSource2 = [
+        { col1: 'value7', col2: 'value8', col3: 'value9' },
+        { col1: 'value10', col2: 'value11', col3: 'value12' },
+      ];
+
+      // Populate table with data from both data sources
+      const tableBody = document.querySelector('#myTable tbody');
+
+      dataSource1.forEach((data) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+    <td contenteditable="true">${data.col1}</td>
+    <td contenteditable="true">${data.col2}</td>
+    <td contenteditable="true">${data.col3}</td>
+  `;
+        tableBody.appendChild(row);
+      });
+
+      dataSource2.forEach((data) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+    <td contenteditable="true">${data.col1}</td>
+    <td contenteditable="true">${data.col2}</td>
+    <td contenteditable="true">${data.col3}</td>
+  `;
+        tableBody.appendChild(row);
+      });
+
+      // Add event listener to save data on blur
+      tableBody.addEventListener('blur', (event) => {
+        const cell = event.target;
+        const rowIndex = cell.parentNode.rowIndex - 1; // Subtract 1 to account for header row
+        const colIndex = cell.cellIndex;
+
+        // Save data to appropriate data source
+        if (rowIndex < dataSource1.length) {
+          dataSource1[rowIndex][`col${colIndex + 1}`] = cell.textContent;
+        } else {
+          dataSource2[rowIndex - dataSource1.length][`col${colIndex + 1}`] =
+            cell.textContent;
+        }
+      });
+  </script>
+</body>
+</html>

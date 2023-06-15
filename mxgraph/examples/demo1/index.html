@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grapheditor</title>
+  <link rel="stylesheet" href="./styles/grapheditor.css">
+  <script>
+    var urlParams = (function(url){
+      var result = new Object();
+      var idx = url.lastIndexOf('?');
+      if(idx > 0) {
+        var params = url.substring(idx + 1).split('&');
+        for(var i = 0; i < params.length; i++) {
+          idx = params[i].indexOf('=');
+          if(idx > 0) {
+            result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
+          }
+        }
+      }
+      return result;
+    })(window.location.href);
+
+    mxLoadResources = false;
+  </script>
+  <script type="text/javascript" src="./js/Init.js"></script>
+</head>
+<body>
+  
+</body>
+</html>

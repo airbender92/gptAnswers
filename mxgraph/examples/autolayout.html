@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto layout example for mxGraph</title>
+  <script>
+    mxBasePath = '../resource/src';
+  </script>
+  <script src="../resource/mxClient.js"></script>
+  <script>
+    function main(container) {
+      if(!mxClient.isBrowserSupported()){
+        mxUtils.error('Browser is not supported!', 200, false);
+    }
+    else {
+      mxEvent.disableContextMenu(container);
+
+      // this variable references the original, unmodified version of the installCellOverlayListeners function
+      var mxCellRendererInstallCellOverlayListeners = mxCellRenderer.prototype.installCellOverlayListeners;
+      mxCellRenderer.prototype.installCellOverlayListeners = function(state, overlay, shape) {
+        mxCellRendererInstallCellOverlayListeners.apply(this, arguments);
+
+        mxEvent.addListener(shape.node, (mxClient.IS_POINTER) ? 'pointerdown' : 'mousedown', function(evt){
+          overlay.fireEvent(new mxEventObject('pointerdown', 'event', evt, 'state', state));
+        });
+
+        if(!mxClient.IS_POINTER && mxClient.IS_TOUCH) {
+          mxEvent.addListener(shape.node, 'touchstart', function(evt) {
+            overlay.fireEvent(new mxEventObject('pointerdown', 'event', evt, 'state', state))
+          })
+        }
+      };
+
+      var graph = new mxGraph(container);
+      graph.setPanning(true);
+      graph.panningHandler.useLeftButtonForPanning = true;
+      graph.setAllowDanglingEdges(false);
+      graph.connectionHandler.select = false;
+      graph.view.setTranslate(50, 50);
+
+      new mxRubberband(graph);
+
+      var parent = graph.getDefaultParent();
+      var addOverlay = function(cell) {
+        var overlay = new mxCellOverlay(new mxImage('../resource/src/images/point.gif', 24, 24), 'Add outgoing');
+        overlay.cursor = 'hand';
+
+        overlay.addListener(mxEvent.CLICK, function(sender, evt2){
+          graph.clearSelection();
+          var geo = graph.getCellGeometry(cell);
+
+          var v2;
+
+          executeLayout(function(){
+            v2 = graph.insertVertex(parent, null, 'World', geo.x, geo.y, 80, 30);
+            addOverlay(v2);
+            graph.view.refresh(v2);
+            var el = graph.insertEdge(parent, null, '', cell, v2);
+          }, function () {
+            graph.scrollCellToVisible(v2);
+          })
+        });
+
+        overlay.addListener('pointerdown', function(sender, eo){
+          var evt2 = eo.getProperty('event');
+          var state = eo.getProperty('state');
+
+          graph.popupMenuHandler.hideMenu();
+          graph.stopEditing(false);
+
+          var pt = mxUtils.convertPoint(graph.container, mxEvent.getClientX(evt2), mxEvent.getClientY(evt2));
+
+          graph.connectionHandler.start(state, pt.x, pt.y);
+          graph.isMouseDown = true;
+          graph.isMouseTrigger = mxEvent.isMouseEvent(evt2);
+          mxEvent.consume(evt2);
+        });
+
+        graph.addCellOverlay(cell, overlay);
+      }
+
+      graph.getModel().beginUpdate();
+      var v1;
+      try{
+        v1 = graph.insertVertex(parent, null, 'Hello', 0, 0, 80, 30);
+        addOverlay(v1);
+      } finally {
+        graph.getModel().endUpdate();
+      }
+
+      var layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
+      var executeLayout = function(change, post) {
+        graph.getModel().beginUpdate();
+        try {
+          if(change != null) {
+            change();
+          }
+          layout.execute(graph.getDefaultParent(), v1);
+        } catch(e) {
+          throw e;
+        } finally {
+         var morph = new mxMorphing(graph);
+         morph.addListener(mxEvent.DONE, mxUtils.bind(this, function(){
+          graph.getModel().endUpdate();
+          if(post != null) {
+            post();
+          }
+         }));
+         morph.startAnimation();
+        }
+      };
+
+      var edgeHandleConnect = mxEdgeHandler.prototype.connect;
+      mxEdgeHandler.prototype.connect = function(edge, terminal, isSource, isClone, me) {
+        edgeHandleConnect.apply(this, arguments);
+        executeLayout();
+      };
+      graph.resizeCell = function(){
+        mxGraph.prototype.resizeCell.apply(this, arguments);
+        executeLayout();
+      };
+
+      graph.connectionHandler.addListener(mxEvent.CONNECT, function(){
+        executeLayout();
+      })
+    }
+  }
+  </script>
+</head>
+<body onload="main(document.getElementById('graphContainer'))">
+
+  <!-- Creates a container for the graph with a grid wallpaper -->
+  <div id="graphContainer"
+    style="position:relative;overflow:hidden;width:821px;height:641px;background:url('editors/images/grid.gif');cursor:default;">
+  </div>
+</body>
+</html>
