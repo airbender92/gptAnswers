@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>mxGraph Infinite Vertical Line Animation</title>
+  <!-- Include mxGraph library -->
+  <script>
+    mxBasePath = "../resource/src"
+  </script>
+  
+  <!-- Loads and initializes the library -->
+  <script src="../resource/mxClient.js"></script>
+</head>
+
+<body>
+  <!-- mxGraph container -->
+  <div id="graphContainer" style="width: 100%; height: 400px;"></div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+  function animateVerticalLine() {
+    const container = document.getElementById('graphContainer');
+    const graph = new mxGraph(container);
+
+  
+
+    const parent = graph.getDefaultParent();
+    const lineLength = 150;    // Length of the vertical line
+    const nodeWidth = 200;     // Width of the node
+     const nodeHeight = 150;    // Height of the node
+    const animDuration = 2000; // Animation duration in milliseconds
+    const animDelay = 30;      // Delay between animation steps in milliseconds
+
+    graph.getModel().beginUpdate();
+
+    try {
+    
+       const mainNode = graph.insertVertex(parent, null, '', 20, 20, nodeWidth, nodeHeight, 'group=1;collapsible=0;image=;');
+      const verticalLine = graph.insertVertex(mainNode, null, '', 0, 0, 1, lineLength, 'shape=vertical-line;strokeColor=#3e75ff;fillColor=#3e75ff;');
+      let animationStep = 0;
+
+      const animate = () => {
+        const animationFraction = animationStep / animDuration;
+        const x = 20 + animationFraction * (nodeWidth - 20); // Adjust the animation width
+
+        if (x + 2 >= nodeWidth) {
+          // Reset animationStep to zero to loop the animation
+          animationStep = 0;
+          graph.getModel().setGeometry(verticalLine, new mxGeometry(20, 0, 1, lineLength));
+        } else {
+          graph.getModel().setGeometry(verticalLine, new mxGeometry(x, 0, 1, lineLength));
+        }
+
+        animationStep += animDelay;
+
+        setTimeout(animate, animDelay);
+      };
+
+      animate();
+    } finally {
+      graph.getModel().endUpdate();
+    }
+  }
+
+  // Start the animation when the document is ready
+  document.addEventListener('DOMContentLoaded', function () {
+    animateVerticalLine();
+  });
+</script>

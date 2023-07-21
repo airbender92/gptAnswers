@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anchors example for mxGraph</title>
+  <!-- Sets the basepath for the library if not on same directory -->
+  <script>
+    mxBasePath = "../resource/src"
+  </script>
+
+  <!-- Loads and initializes the library -->
+  <script src="../resource/mxClient.js"></script>
+
+
+</head>
+
+<body >
+  <div id="graphContainer" style="width:321px; height: 241px"></div>
+  <script>
+    // Define the node types
+    const nodeTypes = {
+      'type1': {
+        style: {
+          fillColor: '#FF0000',
+          shape: 'ellipse'
+        },
+        icon: 'https://www.mxgraph.com/images/icons48/gear.png'
+      },
+      type2: {
+        style: {
+          fillColor: '#00FF00',
+          shape: 'rectangle'
+        },
+        icon: 'https://www.mxgraph.com/images/icons48/gear.png'
+      }
+    }
+
+    function createCustomNode(graph, parent, x, y, width, height, style,cell){
+      const vertex = graph.createVertex(parent, null, '', x, y, width, height, style);
+      const img = new mxImage(nodeTypes[cell.type].icon, 16, 16);
+      vertex.setVertexIcon(img);
+      return vertex;
+    }
+
+    const container = document.getElementById('graphContainer');
+    const graph = new mxGraph(container);
+
+    graph.setCellsResizable(false);
+    graph.setAllowDanglingEdges(false);
+    graph.setConnectable(false);
+
+    const node1 = createCustomNode(graph, graph.getDefaultParent(), 400, 400, 80, 40, nodeTypes['type1'].style, {type: 'type1'});
+    node1.type = 'type1';
+
+    // Define the node styles
+    const style = {};
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+    style[mxConstants.STYLE_FILLCOLOR] = '#C3D9FF';
+    style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
+    style[mxConstants.STYLE_ROUNDED] = true;
+
+    // Define the highlight styles
+    const highlightStyle = {};
+    highlightStyle[mxConstants.STYLE_FILLCOLOR] = 'red';
+
+    // Create the nodes
+    const startNode = graph.insertVertex(
+      graph.getDefaultParent(),
+      'startNode',
+      'Start',
+      20,
+      20,
+      80,
+      30,
+      style
+    );
+
+    const aNode = graph.insertVertex(
+      graph.getDefaultParent(),
+      'aNode',
+      'A',
+      150,
+      100,
+      80,
+      30,
+      style
+    );
+
+    const bNode = graph.insertVertex(
+      graph.getDefaultParent(),
+      'bNode',
+      'B',
+      150,
+      200,
+      80,
+      30,
+      style
+    );
+
+    const endNode = graph.insertVertex(
+      graph.getDefaultParent(),
+      'endNode',
+      'End',
+      280,
+      150,
+      80,
+      30,
+      style
+    );
+
+    // Highlight functon
+    function highlightCell(cell) {
+      graph.setCellStyles(
+        mxConstants.STYLE_FILLCOLOR,
+        highlightStyle[mxConstants.STYLE_FILLCOLOR],
+        [cell]
+      )
+    }
+
+    // Unhighlight function
+    function UnhighlightCell(cell) {
+      graph.setCellStyles(
+        mxConstants.STYLE_FILLCOLOR,
+        style[mxConstants.STYLE_FILLCOLOR],
+        [cell]
+      )
+    }
+
+    graph.addListener(mxEvent.MOUSE_MOVE, function (sender, evt) {
+      const cell = evt.getProperty('cell');
+      if (cell != null && cell.isVertex()) {
+        highlightCell(cell);
+      }
+    })
+
+    graph.addListener(mxEvent.MOUSE_EXIT, function (sender, evt) {
+      const cell = evt.getProperty('cell');
+      if (cell != null && cell.isVertex()) {
+        UnhighlightCell(cell);
+      }
+    })
+
+  </script>
+</body>
+
+</html>
