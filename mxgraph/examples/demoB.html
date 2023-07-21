@@ -24,7 +24,6 @@
     const container = document.getElementById('graphContainer');
     const graph = new mxGraph(container);
 
-  
 
     const parent = graph.getDefaultParent();
     const lineLength = 150;    // Length of the vertical line
@@ -33,6 +32,7 @@
     const animDuration = 2000; // Animation duration in milliseconds
     const animDelay = 30;      // Delay between animation steps in milliseconds
 
+    
     graph.getModel().beginUpdate();
 
     try {
