@@ -37,6 +37,11 @@
         // Creates the graph inside the given container
         var graph = new mxGraph(container);
 
+        mxLog.show();
+        for (var i in mxCellRenderer.defaultShapes) {
+          mxLog.debug(i);
+        }
+
         function updateStyle(state, hover) {
           if (hover) {
             state.style[mxConstants.STYLE_FILLCOLOR] = '#ff0000';
