@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>HTML to Canvas Coordinates Demo</title>
+  <style>
+    canvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="400" height="200"></canvas>
+  <script>
+   // Get the canvas element and its 2D drawing context
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Define translation and scaling factors
+    const TRANSLATE_X = 0;
+    const TRANSLATE_Y = 0;
+    const SCALE_X = 2;
+    const SCALE_Y = 2;
+
+    // Conversion function: HTML point to Canvas point
+    function HtmlPointToCanvasPoint([x, y]) {
+      return [(x - TRANSLATE_X) / SCALE_X, (y - TRANSLATE_Y) / SCALE_Y];
+    }
+
+    // Add a click event listener to the canvas
+    canvas.addEventListener('click', (event) => {
+      // Get the mouse click coordinates in HTML space using offsetX and offsetY
+      const htmlX = event.offsetX;
+      const htmlY = event.offsetY;
+
+      // Convert HTML coordinates to Canvas coordinates
+      const [canvasX, canvasY] = HtmlPointToCanvasPoint([htmlX, htmlY]);
+
+      // Draw a red rectangle at the converted Canvas coordinates
+      ctx.fillStyle = 'red';
+      ctx.fillRect(canvasX, canvasY, 20, 20);
+    });
+
+
+  </script>
+</body>
+
+</html>
