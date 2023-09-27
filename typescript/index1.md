@@ -138,3 +138,73 @@ console.log(node.BaseType); // Output: ElementType.NODE (assuming it's properly 
 ```
 
 In this example, you import the `BaseNodeModel` class as the default export from the module, create an instance of the class, and access its `BaseType` property, which should be `'ElementType.NODE'` as per the interface definition.
+
+------------------------------------
+
+```ts
+element = element as BaseEdgeModel;
+```
+The code snippet you provided is using TypeScript syntax for type assertion. This line of code is asserting that the variable `element` is of type `BaseEdgeModel` or a subtype of `BaseEdgeModel`. In other words, it's telling the TypeScript compiler to treat `element` as if it's of type `BaseEdgeModel` for the duration of that statement.
+
+Here's a breakdown of what's happening:
+
+1. `element` is presumably a variable with a type that is compatible with or derived from `BaseEdgeModel`.
+
+2. `as BaseEdgeModel` is a type assertion. It tells TypeScript that you are sure that `element` should be treated as a `BaseEdgeModel` or a subtype of it.
+
+3. After this type assertion, you can use `element` as if it's of type `BaseEdgeModel`. TypeScript will allow you to access properties and methods specific to the `BaseEdgeModel` type without generating type-checking errors.
+
+However, be cautious when using type assertions, as they essentially tell TypeScript to trust you even if it might not be correct. If you're wrong about the type, it can lead to runtime errors or unexpected behavior. It's generally a good practice to use type assertions only when you are confident about the type compatibility and have no other way to ensure type correctness in your code.
+
+
+-----------------------------
+```ts
+ changeNodeId<T extends string>(oldId, newId?: T | string): T | string{}
+```
+Using `T extends string` with TypeScript generics can be useful in various scenarios where you want to work with types that are either strings or extend strings. It provides flexibility and type safety in situations where your code needs to handle different types that share string-like characteristics.
+
+Here's a usage demo and explanation of why it might be necessary:
+
+```typescript
+// Example 1: Generic function with T extending string
+function concatenate<T extends string>(a: T, b: T): T {
+  return a + b;
+}
+
+const result = concatenate("Hello, ", "world!"); // valid
+console.log(result); // "Hello, world!"
+
+// Example 2: Using different types that extend string
+type CustomString = string | String; // CustomString extends string
+
+const str1: CustomString = "Hello";
+const str2: CustomString = new String("world");
+
+const combined = concatenate(str1, str2); // valid, str1 and str2 extend string
+console.log(combined); // "Helloworld"
+
+// Example 3: Using enums represented as strings
+enum Size {
+  Small = 'S',
+  Medium = 'M',
+  Large = 'L'
+}
+
+const size: Size = Size.Medium;
+const label = concatenate("Size: ", size); // valid, size is a string-like enum
+console.log(label); // "Size: M"
+```
+
+In these examples:
+
+1. The `concatenate` function is a generic function that takes two parameters of type `T` (which extends `string`) and concatenates them. This allows you to concatenate strings of various types, including primitive strings, String objects, and enum values represented as strings.
+
+2. The `CustomString` type represents values that can be either primitive strings or String objects. By using `T extends string`, you ensure that the `concatenate` function can work with values of this type.
+
+3. The `Size` enum represents string values, so it is considered a type that extends `string`. You can use it with the `concatenate` function without issues.
+
+Is it necessary to use `T extends string`? It depends on your specific use case. If your code needs to handle various types that are either strings or extend strings, then it can be beneficial to use this constraint to provide type safety and flexibility. However, if you know that you are dealing only with primitive strings, you may not need it. It's about choosing the right level of type flexibility and safety for your particular situation.
+
+
+-------------------------------------
+

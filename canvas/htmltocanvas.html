@@ -12,6 +12,7 @@
 
 <body>
   <canvas id="myCanvas" width="400" height="200"></canvas>
+  <canvas id="myCanvas2" width="400" height="200"></canvas>
   <script>
    // Get the canvas element and its 2D drawing context
     const canvas = document.getElementById('myCanvas');
@@ -42,6 +43,25 @@
       ctx.fillRect(canvasX, canvasY, 20, 20);
     });
 
+
+  </script>
+  <script>
+    // Get a reference to the canvas element and its context
+      var canvas2 = document.getElementById("myCanvas2");
+      var ctx2 = canvas2.getContext("2d");
+
+      // Define the scaling factors
+      var scaleX = 2; // Scale horizontally by a factor of 2
+      var scaleY = 2; // Scale vertically by a factor of 2
+
+      // Apply the scaling transformation
+      ctx2.scale(scaleX, scaleY);
+
+      // Now, anything drawn on the canvas will be scaled by the specified factors
+
+      // Example: Draw a rectangle (original size: 100x50)
+      ctx2.fillStyle = "blue";
+      ctx2.fillRect(10, 10, 100, 50); // This will be scaled to 200x100 on the canvas
 
   </script>
 </body>
