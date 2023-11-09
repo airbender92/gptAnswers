@@ -4,15 +4,11 @@ const routes = [
   {
     path: '/login',
     component: './Login',
+    exact: true
   },
-  {
-    path: '/',
-    component: '@/layouts/BasicLayout',
-    routes: [
-      { path: '/home', component: './Home' },
-      { path: '/about', component: './About' },
-      { path: '/date', component: './Date' },
-    ],
-  },
+  { path: '/home', component: './Home',  exact: true },
+      { path: '/about', component: './About',  exact: true },
+      { path: '/date', component: './Date',  exact: true },
+
 ];
 export default routes;
